@@ -51,7 +51,7 @@ app.get('/cartera/:id', async (req, res) => {
 // 🆕 Endpoint para Excel diario
 app.get('/cafci', async (req, res) => {
   try {
-    const response = await fetchConTimeout('https://api.cafci.org.ar/pb_get', {}, 10000);
+    const response = await fetchConTimeout('https://api.pub.cafci.org.ar/pb_get', {}, 10000);
     if (!response.ok) {
       return res.status(response.status).json({ error: 'Error al obtener el Excel de CAFCI' });
     }
@@ -68,4 +68,5 @@ app.get('/cafci', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor proxy CAFCI escuchando en http://localhost:${PORT}`);
 });
+
 
