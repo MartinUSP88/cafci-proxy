@@ -65,8 +65,34 @@ app.get('/cafci', async (req, res) => {
   }
 });
 
+// 🆕 Endpoint para fondos CAFCI (listado completo)
+app.get('/fondos', async (req, res) => {
+  const url = 'https://api.pub.cafci.org.ar/fondo?estado=1&include=entidad;depositaria,entidad;gerente,tipoRenta,tipoRentaMixta,region,benchmark,horizonte,duration,tipo_fondo,clase_fondo&limit=0&order=clase_fondos.nombre';
+
+  try {
+    const response = await fetchConTimeout(url, {
+      headers: {
+        'accept': 'application/json',
+        'origin': 'https://www.cafci.org.ar',
+        'referer': 'https://www.cafci.org.ar/',
+        'user-agent': 'Mozilla/5.0'
+      }
+    }, 15000);
+
+    const data = await response.text();
+    res.status(response.status).send(data);
+
+  } catch (err) {
+    console.error('❌ Error al obtener fondos:', err.message);
+    const status = err.name === 'AbortError' ? 504 : 500;
+    res.status(status).json({ error: 'Fallo al obtener fondos', detalle: err.message });
+  }
+});
+
+
 app.listen(PORT, () => {
   console.log(`Servidor proxy CAFCI escuchando en http://localhost:${PORT}`);
 });
+
 
 
